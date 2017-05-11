@@ -5,17 +5,85 @@
  */
 package Formularios;
 
+import java.awt.*;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.text.*;
+import java.util.*;
+
 /**
  *
  * @author h0117-00pc02
  */
 public class DatosPaciente extends javax.swing.JFrame {
 
+    public Connection con = null;
+    public Statement st = null;
+    public String bd = "Mastologia";
+    //asegurate de cambiar esto por el nombre tu usuario en mysql
+    public String login = "root";
+    //aqui escribe la contraseña de ese usuario
+    public String password = "luna16";
+    public String url = "jdbc:mysql://localhost/" + bd;
+    private static final long serialVersionUID = 1L;
+
+    String DUI, EXP, NOMBRE, TELEFONO, FECHA_Motivo = "";
+    String Flag_Null = "";
+    int EDAD, maxId = 1;
+    int MASTALGIA = 0, DERMATITIS = 0, NODULO = 0, MOTIVO_SECRECION = 0, MOTIVO_SISTEMATIZACION = 0;
+    String MOTIVO_CONSULTA;
+    
     /**
      * Creates new form DatosPaciente
      */
     public DatosPaciente() {
         initComponents();
+        
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Fecha_Consulta.setFormats(dateFormat);
+        
+        java.util.Calendar fecha = Calendar.getInstance();
+
+        Fecha_Consulta.setDate(fecha.getTime());
+
+        MaskFormatter DUI = null;
+        MaskFormatter Expediente = null;
+        try {
+            DUI = new MaskFormatter("########-#");
+            Expediente = new MaskFormatter("#####-##");
+        } catch (ParseException ex) {
+            Logger.getLogger(DatosPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DUI.setValueClass(String.class);
+        DUI.setPlaceholderCharacter('_');
+        DefaultFormatterFactory DUIFormatterFactory = new DefaultFormatterFactory(DUI);
+        txtDUI.setFormatterFactory(DUIFormatterFactory);
+
+        Expediente.setValueClass(String.class);
+        Expediente.setPlaceholderCharacter('_');
+        DefaultFormatterFactory ExpedienteFormatterFactory = new DefaultFormatterFactory(Expediente);
+        txtExpediente.setFormatterFactory(ExpedienteFormatterFactory);
+
+        try {
+
+            Class.forName("org.gjt.mm.mysql.Driver");
+            con = DriverManager.getConnection(url, login, password);
+            if (con != null) {
+                System.out.println("Yeah, hemos conectado con  " + url + " ... Ok");
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                //conn.close();
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base" + url);
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+        
     }
 
     /**
@@ -32,25 +100,25 @@ public class DatosPaciente extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jXDatePicker1 = new org.jdesktop.swingx.JXDatePicker();
+        txtNombre = new javax.swing.JTextField();
+        txtExpediente = new javax.swing.JFormattedTextField();
+        txtDUI = new javax.swing.JFormattedTextField();
+        txtEdad = new javax.swing.JTextField();
+        Fecha_Consulta = new org.jdesktop.swingx.JXDatePicker();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        txtTelefono = new javax.swing.JFormattedTextField();
         jLabel8 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
+        Check_Mastalgia = new javax.swing.JCheckBox();
+        Check_Dermatitis = new javax.swing.JCheckBox();
+        Check_Secrecion = new javax.swing.JCheckBox();
+        Check_Nodulo = new javax.swing.JCheckBox();
+        Check_Sistematizacion = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        TextArea_Otros = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
+        btn_Cancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -64,32 +132,41 @@ public class DatosPaciente extends javax.swing.JFrame {
 
         jLabel5.setText("Fecha");
 
+        txtEdad.setText("0");
+
         jLabel6.setFont(new java.awt.Font("DejaVu Sans", 3, 14)); // NOI18N
         jLabel6.setText("Datos del Paciente");
 
         jLabel7.setText("Tel:");
 
+        txtTelefono.setText("0");
+
         jLabel8.setFont(new java.awt.Font("DejaVu Sans", 3, 14)); // NOI18N
         jLabel8.setText("Motivo Consulta");
 
-        jCheckBox1.setText("Mastalgia");
+        Check_Mastalgia.setText("Mastalgia");
 
-        jCheckBox2.setText("Dermatitis");
+        Check_Dermatitis.setText("Dermatitis");
 
-        jCheckBox3.setText("Secrecion");
+        Check_Secrecion.setText("Secrecion");
 
-        jCheckBox4.setText("Nodulo");
+        Check_Nodulo.setText("Nodulo");
 
-        jCheckBox5.setText("Z.Sistematizacion");
+        Check_Sistematizacion.setText("Z.Sistematizacion");
 
-        jScrollPane1.setViewportView(jTextPane1);
+        jScrollPane1.setViewportView(TextArea_Otros);
 
         jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         jLabel9.setText("Otros:");
 
-        jButton1.setText("Siguiente");
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Cancelar");
+        btn_Cancelar.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,23 +181,23 @@ public class DatosPaciente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(Check_Mastalgia)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox4)
+                                .addComponent(Check_Nodulo)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox2)
+                                .addComponent(Check_Dermatitis)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox3))
+                                .addComponent(Check_Secrecion))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox5))
+                                .addComponent(Check_Sistematizacion))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(16, 16, 16)
-                                .addComponent(jButton1)
+                                .addComponent(btnSiguiente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2))))
+                                .addComponent(btn_Cancelar))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -128,25 +205,25 @@ public class DatosPaciente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtExpediente, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtDUI, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel5))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Fecha_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -157,35 +234,35 @@ public class DatosPaciente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtExpediente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Fecha_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jCheckBox5))
+                    .addComponent(Check_Mastalgia)
+                    .addComponent(Check_Nodulo)
+                    .addComponent(Check_Dermatitis)
+                    .addComponent(Check_Secrecion)
+                    .addComponent(Check_Sistematizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSiguiente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
 
@@ -193,6 +270,112 @@ public class DatosPaciente extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        
+        DateFormat myformat = new SimpleDateFormat("yyyy-MM-dd");
+        NOMBRE = txtNombre.getText();
+        DUI = txtDUI.getText();
+        EXP = txtExpediente.getText();
+        TELEFONO = txtTelefono.getText();
+        FECHA_Motivo = myformat.format(Fecha_Consulta.getDate()).toString();
+        EDAD = Integer.parseInt(txtEdad.getText());
+        MOTIVO_CONSULTA = TextArea_Otros.getText();
+        if (Check_Mastalgia.isSelected() == true) {
+            MASTALGIA = 1;
+        }
+        if (Check_Dermatitis.isSelected() == true) {
+            DERMATITIS = 1;
+        }
+        if (Check_Nodulo.isSelected() == true) {
+            NODULO = 1;
+        }
+        if (Check_Secrecion.isSelected() == true) {
+            MOTIVO_SECRECION = 1;
+        }
+        if (Check_Sistematizacion.isSelected() == true) {
+            MOTIVO_SISTEMATIZACION = 1;
+        }
+
+        if (Verificacion()) {
+
+            //                    try {
+//                                          String query = " INSERT INTO `Datos_Paciente`(`Expediente`, `DUI`, `Nombre`, `Edad`, `Tel`, `Mastalgia`, `Dermatitis`, `Nodulo`, `Consulta_Secrecion`, `Sistematizacion`, `Consulta_Otros`, `Fecha`)"
+//                                          + " values (?,?,?,?,?,?,?,?,?,?,?,?)";
+//                                          //create the mysql insert preparedstatement
+//                                          PreparedStatement preparedStmt = con.prepareStatement(query);
+//                                          preparedStmt.setString(1, EXP);
+//                                          preparedStmt.setString(2, DUI);
+//                                          preparedStmt.setString(3, NOMBRE);
+//                                          preparedStmt.setInt(4, EDAD);
+//                                          preparedStmt.setString(5, TELEFONO);
+//                                          preparedStmt.setInt(6, MASTALGIA);
+//                                          preparedStmt.setInt(7, DERMATITIS);
+//                                          preparedStmt.setInt(8, NODULO);
+//                                          preparedStmt.setInt(9, MOTIVO_SECRECION);
+//                                          preparedStmt.setInt(10, MOTIVO_SISTEMATIZACION);
+//                                          preparedStmt.setString(11, MOTIVO_CONSULTA);
+//                                          preparedStmt.setString(12, FECHA_Motivo);
+//                                        //execute the preparedstatement
+//                                          preparedStmt.execute();
+//                           Statement sentencia = null;
+//                          ResultSet resultados = null;
+//                          sentencia=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+//
+//                          resultados = sentencia.executeQuery("SELECT MAX(`IdDatos_Paciente`) as maxid FROM `Datos_Paciente`" );
+//        
+                        JOptionPane.showMessageDialog(null, "BIP BOP BIP");
+                        
+                        FactoresRiesgos JFactores = new FactoresRiesgos();
+                        JFactores.setVisible(true);
+                        DatosPaciente llamarForm = new DatosPaciente();
+                        llamarForm.dispose();
+                        
+//
+//                        con.close();
+//
+                                                
+//                    } catch (SQLException e) {
+//                        JOptionPane.showMessageDialog(null, "not connect to server and message is" + e.getMessage());
+//                    }
+        } else {
+            MASTALGIA = 0; DERMATITIS = 0; NODULO = 0; MOTIVO_SECRECION = 0; MOTIVO_SISTEMATIZACION = 0;
+            JOptionPane.showMessageDialog(null, "Hay elementos sin llenar, favor verificar datos");
+        }
+        
+        
+
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private Boolean Verificacion() {
+        
+
+        if ((NOMBRE.equals(Flag_Null)) || (DUI.equals(Flag_Null)) || (EXP.equals(Flag_Null)) || (TELEFONO.equals(Flag_Null)))//Primer if de verificacion 
+        {
+            return false;
+        } 
+        else 
+        {
+            if ((MASTALGIA == 1) || (MOTIVO_SISTEMATIZACION == 1) || (MOTIVO_SECRECION == 1) || (NODULO == 1) || (DERMATITIS == 1)) // Segundo if de verificacion
+            {//------------------------------------------------
+                
+                if ((EDAD >= 15) && (EDAD <= 100))// Tercer if de verificacion 
+                {
+                    return true;
+                } 
+                else 
+                {
+                    return false;
+                }// Tercer if de verificacion
+            } 
+            else 
+            {
+                return false;
+            }//Segundo if de verificacion
+        }// Primer if de verificacion
+
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -229,16 +412,15 @@ public class DatosPaciente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
-    private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JCheckBox Check_Dermatitis;
+    private javax.swing.JCheckBox Check_Mastalgia;
+    private javax.swing.JCheckBox Check_Nodulo;
+    private javax.swing.JCheckBox Check_Secrecion;
+    private javax.swing.JCheckBox Check_Sistematizacion;
+    private org.jdesktop.swingx.JXDatePicker Fecha_Consulta;
+    private javax.swing.JTextPane TextArea_Otros;
+    private javax.swing.JButton btnSiguiente;
+    private javax.swing.JButton btn_Cancelar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -249,9 +431,10 @@ public class DatosPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextPane jTextPane1;
-    private org.jdesktop.swingx.JXDatePicker jXDatePicker1;
+    private javax.swing.JFormattedTextField txtDUI;
+    private javax.swing.JTextField txtEdad;
+    private javax.swing.JFormattedTextField txtExpediente;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JFormattedTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

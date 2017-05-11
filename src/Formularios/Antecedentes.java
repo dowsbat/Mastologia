@@ -4,18 +4,49 @@
  * and open the template in the editor.
  */
 package Formularios;
-
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.*;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Abyss
  */
 public class Antecedentes extends javax.swing.JFrame {
-
+public Connection con = null;
+    public Statement st=null;
+    public String bd = "Mastologia";   
+    //asegurate de cambiar esto por el nombre tu usuario en mysql
+    public String login = "root"; 
+    //aqui escribe la contraseña de ese usuario
+    public String password = "luna16";
+    public String url = "jdbc:mysql://localhost/"+bd;  
     /**
      * Creates new form Antecedentes
      */
     public Antecedentes() {
         initComponents();
+        try {
+        
+        Class.forName("org.gjt.mm.mysql.Driver");
+        con = DriverManager.getConnection(url, login, password);
+        if (con != null)
+        {
+            System.out.println("Yeah, hemos conectado con  "+url+" ... Ok");
+            st=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            //conn.close();
+        }
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base" + url);
+        }catch(ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+        
+        
     }
 
     /**
@@ -43,7 +74,7 @@ public class Antecedentes extends javax.swing.JFrame {
         chk_CACU = new javax.swing.JCheckBox();
         chk_Ant_Personal_CA_mama = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +82,8 @@ public class Antecedentes extends javax.swing.JFrame {
         jLabel4.setText("Antecedentes de  Famiiliar Directo con:");
 
         jLabel1.setText("Edad");
+
+        txt_Ante_Edad.setText("0");
 
         chk_Biopsias.setText("Biopsias previas de mama");
 
@@ -78,7 +111,12 @@ public class Antecedentes extends javax.swing.JFrame {
 
         jButton1.setText("Cancelar");
 
-        jButton2.setText("Siguiente");
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,7 +158,7 @@ public class Antecedentes extends javax.swing.JFrame {
                                 .addComponent(chk_CACU)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
+                            .addComponent(btnSiguiente)
                             .addComponent(jButton1))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -155,7 +193,7 @@ public class Antecedentes extends javax.swing.JFrame {
                             .addComponent(chk_Ante_Alcoholismo)
                             .addComponent(chk_Ante_Toxicomanias)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(19, Short.MAX_VALUE))
@@ -163,6 +201,93 @@ public class Antecedentes extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+            
+         //Antecedentes
+        int CA_MAMA=0, COLON=0, OVARIO=0, CACU=0, ANTCAMAMA=0,ANTEDAD=0, BIOPSIASPREVIAS=0, HALLAZGOSBENIGNO=0, HALLAZGOMALIGNO=0, HALLAZGOATIPIA=0, TABAQUISMO=0, ALCOHOLISMO=0, TOXICOMANIAS=0;
+        //Exploracion fisica
+        int TUMOR=0, PIEL=0, PEZON=0, GANGLIOS=0, COLECCIONES=0, ULCERA=0, ZONASISTEMATIZACION=0, SECRECCION=0,maxId=0;
+          
+        //Declaracion de variables de Tabla Antecedentes
+        if (chk_CAmama.isSelected() == true) { CA_MAMA = 1;  }
+        if (chk_Colon.isSelected() == true) { COLON = 1;  }
+        if (chk_Ovario.isSelected() == true) {  OVARIO = 1; }
+        if (chk_CACU.isSelected() == true) { CACU = 1;  }
+        if (chk_Ant_Personal_CA_mama.isSelected() == true) { ANTCAMAMA = 1; }
+        ANTEDAD = Integer.parseInt(txt_Ante_Edad.getText());
+        if (chk_Biopsias.isSelected() == true) { BIOPSIASPREVIAS = 1; }
+        if (chk_Ante_Benigno.isSelected() == true) { HALLAZGOSBENIGNO = 1; }
+        if (chk_Ante_Maligno.isSelected() == true) { HALLAZGOMALIGNO = 1; }
+        if (chk_Ante_Atipia.isSelected() == true) { HALLAZGOATIPIA = 1;  }
+        if (chk_Ante_Alcoholismo.isSelected() == true) { ALCOHOLISMO = 1; }
+        if (chk_Ante_Tabaquismo.isSelected() == true) { TABAQUISMO = 1;  }
+        if (chk_Ante_Toxicomanias.isSelected() == true) { TOXICOMANIAS = 1; }
+        
+        //Tabla Exploracion 
+//        if (chk_Tumor.isSelected() == true) { TUMOR = 1; }
+//        if (chk_Piel.isSelected() == true) { PIEL = 1; }
+//        if (chk_Pezon.isSelected() == true) { PEZON = 1; }
+//        if (chk_Ganglios.isSelected() == true) { GANGLIOS = 1; }
+//        if (chk_Colecciones.isSelected() == true) { COLECCIONES = 1;  }
+//        if (chk_Ulcera.isSelected() == true) { ULCERA = 1; }
+//        if (chk_Zona_Sistema.isSelected() == true) { ZONASISTEMATIZACION = 1;  }
+//        if (chk_Secrecion.isSelected() == true) { SECRECCION = 1; }
+//        
+        try{
+            Statement sentencia = null;
+            ResultSet resultados = null;
+            sentencia=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            resultados = sentencia.executeQuery("SELECT MAX(`IdDatos_Paciente`) as maxid FROM `Datos_Paciente`" );
+//            
+            while( resultados.next() )
+            {
+                maxId = resultados.getInt("maxid");
+            }
+            String query = "INSERT INTO "
+                    + "`Antecedentes`(`IdDatos_PacienteFK`,`CA_mama`,`Colon`,`Ovario`,`CACU`,`Ant_Personal_CA_mama`,`Ante_Edad`,`Biopsias`,`Ante_Benigno`,`Ante_Maligno`,`Ante_Atipia`,`Ante_Tabaquismo`,`Ante_Alcoholismo`,`Ante_Toxicomanias`) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+          //create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, maxId);
+            preparedStmt.setInt(2, CA_MAMA);
+            preparedStmt.setInt(3, COLON);
+            preparedStmt.setInt(4, OVARIO);
+            preparedStmt.setInt(5, CACU);
+            preparedStmt.setInt(6, ANTCAMAMA);
+            preparedStmt.setInt(7, ANTEDAD);
+            preparedStmt.setInt(8, BIOPSIASPREVIAS);
+            preparedStmt.setInt(9, HALLAZGOSBENIGNO);
+            preparedStmt.setInt(10, HALLAZGOMALIGNO);
+            preparedStmt.setInt(11, HALLAZGOATIPIA);
+            preparedStmt.setInt(12, ALCOHOLISMO);
+            preparedStmt.setInt(13, TABAQUISMO);
+            preparedStmt.setInt(14, TOXICOMANIAS);
+            preparedStmt.execute();  
+          
+
+            query = "INSERT INTO `Exploracion`(`IdDatos_PacienteFK`,`Tumor`,`Piel`,`Pezon`,`Ganglios_Sospechosos`,`Colecciones`,`Ulcera`,`Zona_Sistematizacion`,`Secrecion`) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?)";
+          //create the mysql insert preparedstatement
+           
+            preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, maxId);
+            preparedStmt.setInt(2, TUMOR);
+            preparedStmt.setInt(3, PIEL);
+            preparedStmt.setInt(4, PEZON);
+            preparedStmt.setInt(5, GANGLIOS);
+            preparedStmt.setInt(6, COLECCIONES);
+            preparedStmt.setInt(7, ULCERA);
+            preparedStmt.setInt(8, ZONASISTEMATIZACION);
+            preparedStmt.setInt(9, SECRECCION);
+              preparedStmt.execute();  
+            
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base");
+        }
+            // TODO add your handling code here:
+    }//GEN-LAST:event_btnSiguienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -200,6 +325,7 @@ public class Antecedentes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSiguiente;
     private javax.swing.JCheckBox chk_Ant_Personal_CA_mama;
     private javax.swing.JCheckBox chk_Ante_Alcoholismo;
     private javax.swing.JCheckBox chk_Ante_Atipia;
@@ -213,7 +339,6 @@ public class Antecedentes extends javax.swing.JFrame {
     private javax.swing.JCheckBox chk_Colon;
     private javax.swing.JCheckBox chk_Ovario;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField txt_Ante_Edad;

@@ -4,18 +4,52 @@
  * and open the template in the editor.
  */
 package Formularios;
-
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Abyss
  */
 public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
 
+    public Connection con = null;
+    public Statement st=null;
+    public String bd = "Mastologia";   
+    //asegurate de cambiar esto por el nombre tu usuario en mysql
+    public String login = "root"; 
+    //aqui escribe la contraseña de ese usuario
+    public String password = "luna16";
+    public String url = "jdbc:mysql://localhost/"+bd;
     /**
      * Creates new form Cita_Impresion_Comentarios
      */
     public Cita_Impresion_Comentarios() {
         initComponents();
+        
+        java.util.Calendar fecha = Calendar.getInstance();
+              
+        JDCitaSubsecuente.setDate(fecha.getTime());
+        
+        try {
+        
+        Class.forName("org.gjt.mm.mysql.Driver");
+        con = DriverManager.getConnection(url, login, password);
+        if (con != null)
+        {
+            System.out.println("Yeah, hemos conectado con  "+url+" ... Ok");
+            st=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            //conn.close();
+        }
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base" + url);
+        }catch(ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -48,7 +82,7 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtComentarios = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        btnFinalizar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -93,7 +127,12 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
         txtComentarios.setRows(5);
         jScrollPane1.setViewportView(txtComentarios);
 
-        jButton1.setText("Finalizar");
+        btnFinalizar.setText("Finalizar");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Atras");
 
@@ -156,7 +195,7 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnFinalizar)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
@@ -203,12 +242,96 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnFinalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        
+       
+        String FECHA_CITA;
+        int RESULTADOPATBENIGNA=0, RESULTADOSOSPECHOSA=0, ENVIO_ONCO=0, ENVIO_CLIN_PAT_BENIGNA=0, ENVIO_SEGUIMIENTO_ANUAL=0,maxId=0;       
+        
+        DateFormat myformat = new SimpleDateFormat("yyyy-MM-dd");
+                       
+        FECHA_CITA = myformat.format(JDCitaSubsecuente.getDate());
+        if (chk_Res_Pat_Benigna.isSelected() == true) { RESULTADOPATBENIGNA = 1;  }
+        if (chk_Res_Sospechosa.isSelected() == true) { RESULTADOSOSPECHOSA = 1;  }
+        if (chk_Envio_Onco_mama.isSelected() == true) { ENVIO_ONCO = 1; }
+        if (chk_Envia_Clin_Pato_Benigna.isSelected() == true) { ENVIO_CLIN_PAT_BENIGNA = 1; }
+        if (chk_Envio_Seguimiento_Anual.isSelected() == true) { ENVIO_SEGUIMIENTO_ANUAL = 1; }
+        
+        int RIESGOALTO=0, RIESGOPROMEDIO=0;
+
+        int PLAN_CLINICA_ONCO=0, PLAN_PAT_BENIGNA=0, PLAN_SEGUIMIENTO_ANUAL=0, PLAN_ESTUDIOS_COMPLEMENTARIOS=0;
+        String COMENTARIOS;
+        
+        if (chk_Alto.isSelected() == true) { RIESGOALTO = 1;  }
+        if (chk_Promedio.isSelected() == true) { RIESGOPROMEDIO = 1;  }
+        
+        if (chk_OncoMama.isSelected() == true) { PLAN_CLINICA_ONCO = 1; }
+        if (chk_PatBenigna.isSelected() == true) { PLAN_PAT_BENIGNA = 1; }
+        if (chk_SeguimientoAnual.isSelected() == true) { PLAN_SEGUIMIENTO_ANUAL = 1; }
+        if (chk_Estudios_Complementarios.isSelected() == true) { PLAN_ESTUDIOS_COMPLEMENTARIOS = 1; }
+        COMENTARIOS = txtComentarios.getText();
+              
+        
+        try{
+            Statement sentencia = null;
+            ResultSet resultados = null;
+            sentencia=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            resultados = sentencia.executeQuery("SELECT MAX(`IdDatos_Paciente`) as maxid FROM `Datos_Paciente`" );
+//            
+            while( resultados.next() )
+            {
+                maxId = resultados.getInt("maxid");
+            }
+            String query = "INSERT INTO `Cita`(`IdDatos_PacienteFK`, `Fecha_Cita`, `Res_Pat_Benigna`, `Res_Sospechosa`, `Envio_Onco_Mama`, `Envio_Clinica_Pat_Benigna`, `Envio_Seguimiento`) "
+                    + "VALUES (?,?,?,?,?,?,?)";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, maxId);
+            preparedStmt.setString(2, FECHA_CITA);
+            preparedStmt.setInt(3, RESULTADOPATBENIGNA);
+            preparedStmt.setInt(4, RESULTADOSOSPECHOSA);
+            preparedStmt.setInt(5, ENVIO_ONCO);
+            preparedStmt.setInt(6, ENVIO_CLIN_PAT_BENIGNA);
+            preparedStmt.setInt(7, ENVIO_SEGUIMIENTO_ANUAL);
+            
+            preparedStmt.execute();
+            
+            query = "INSERT INTO `Impresion_Riesgo`(`IdDatos_PacienteFK`, `Alto`, `Promedio`) "
+                    + "VALUES (?,?,?)";
+            preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, maxId);
+            preparedStmt.setInt(2, RIESGOALTO);
+            preparedStmt.setInt(3, RIESGOPROMEDIO);
+                       
+            preparedStmt.execute();  
+          
+            query = "INSERT INTO `Plan_Clinica`(`IdDatos_PacienteFK`, `Onco_Mama`, `Pat_Benigna`, `Seguimiento_Anual`, `Estudios_Complementarios`, `Comentario`) "
+                    + "VALUES (?,?,?,?,?,?)";
+            preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt(1, maxId);
+            preparedStmt.setInt(2, PLAN_CLINICA_ONCO);
+            preparedStmt.setInt(3, PLAN_PAT_BENIGNA);
+            preparedStmt.setInt(4, PLAN_SEGUIMIENTO_ANUAL);
+            preparedStmt.setInt(5, PLAN_ESTUDIOS_COMPLEMENTARIOS);
+            preparedStmt.setString(6, COMENTARIOS);
+            
+            preparedStmt.execute();  
+            
+            
+            
+            
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base");
+        }
+        
+    }//GEN-LAST:event_btnFinalizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,6 +370,7 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXDatePicker JDCitaSubsecuente;
+    private javax.swing.JButton btnFinalizar;
     private javax.swing.JCheckBox chk_Alto;
     private javax.swing.JCheckBox chk_Envia_Clin_Pato_Benigna;
     private javax.swing.JCheckBox chk_Envio_Onco_mama;
@@ -258,7 +382,6 @@ public class Cita_Impresion_Comentarios extends javax.swing.JFrame {
     private javax.swing.JCheckBox chk_Res_Pat_Benigna;
     private javax.swing.JCheckBox chk_Res_Sospechosa;
     private javax.swing.JCheckBox chk_SeguimientoAnual;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

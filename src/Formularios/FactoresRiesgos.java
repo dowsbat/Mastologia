@@ -5,17 +5,59 @@
  */
 package Formularios;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.sql.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Abyss
  */
 public class FactoresRiesgos extends javax.swing.JFrame {
 
+    public static String Expiente;
+    
+    String  MOTIVO_EXPO;
+    int PESO, TALLA, IMC, MENARCA, FUR, MENOPAUSIA, TIPO, TIEMPO_DE_USOS,maxId=0;
+    int NULIPARA=0, EMBARAZO=0, TRH=0, EXPOSICION=0;
+    
+    public Connection con = null;
+    public Statement st=null;
+    public String bd = "Mastologia";   
+    //asegurate de cambiar esto por el nombre tu usuario en mysql
+    public String login = "root"; 
+    //aqui escribe la contraseña de ese usuario
+    public String password = "luna16";
+    public String url = "jdbc:mysql://localhost/"+bd;
+    /**
+     * Creates new form JFactores_Riesgos
+     */
+    
+    
+    
     /**
      * Creates new form FactoresRiesgos
      */
     public FactoresRiesgos() {
         initComponents();
+        
+        try {
+        
+        Class.forName("org.gjt.mm.mysql.Driver");
+        con = DriverManager.getConnection(url, login, password);
+        if (con != null)
+        {
+            System.out.println("Yeah, hemos conectado con  "+url+" ... Ok");
+            st=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            //conn.close();
+        }
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base" + url);
+        }catch(ClassNotFoundException ex) {
+            System.out.println(ex);
+        }
+        
     }
 
     /**
@@ -32,25 +74,25 @@ public class FactoresRiesgos extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtPeso = new javax.swing.JTextField();
+        txtTalla = new javax.swing.JTextField();
+        txtIMC = new javax.swing.JTextField();
+        txtMenarca = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtFUR = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        txtMenopausia = new javax.swing.JTextField();
+        chk_Nulipara = new javax.swing.JCheckBox();
+        chk_primer_embarazo = new javax.swing.JCheckBox();
+        chk_THR = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txtTipoTHR = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        txtTiempoTHR = new javax.swing.JTextField();
+        chk_Exposicion_radiacion = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        txt_Exposicion_Motivo = new javax.swing.JTextArea();
+        btnSiguiente = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -66,9 +108,9 @@ public class FactoresRiesgos extends javax.swing.JFrame {
 
         jLabel5.setText("Menarca:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtPeso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtPesoActionPerformed(evt);
             }
         });
 
@@ -76,23 +118,34 @@ public class FactoresRiesgos extends javax.swing.JFrame {
 
         jLabel7.setText("Menopausia");
 
-        jCheckBox1.setText("Nulipara");
+        chk_Nulipara.setText("Nulipara");
 
-        jCheckBox2.setText("1er Embarazo");
+        chk_primer_embarazo.setText("1er Embarazo");
 
-        jCheckBox3.setText("THR");
+        chk_THR.setText("THR");
 
         jLabel8.setText("Tipo");
 
+        txtTipoTHR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTipoTHRActionPerformed(evt);
+            }
+        });
+
         jLabel9.setText("Tiempo de Uso(años)");
 
-        jCheckBox4.setText("Exposicion a Radiacion");
+        chk_Exposicion_radiacion.setText("Exposicion a Radiacion");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txt_Exposicion_Motivo.setColumns(20);
+        txt_Exposicion_Motivo.setRows(5);
+        jScrollPane1.setViewportView(txt_Exposicion_Motivo);
 
-        jButton1.setText("Siguiente");
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancelar");
 
@@ -112,53 +165,53 @@ public class FactoresRiesgos extends javax.swing.JFrame {
                                 .addGap(5, 5, 5)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(9, 9, 9)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtTalla, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtIMC, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtMenarca, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(4, 4, 4)
                                         .addComponent(jLabel6)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtFUR, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel7)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtMenopausia, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jCheckBox1))
+                                        .addComponent(chk_Nulipara))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel9)
-                                            .addComponent(jCheckBox2))
+                                            .addComponent(chk_primer_embarazo))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jCheckBox3)
+                                                .addComponent(chk_THR)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jLabel8)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(txtTipoTHR, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtTiempoTHR, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jCheckBox4))))
+                                                .addComponent(chk_Exposicion_radiacion))))
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnSiguiente, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addContainerGap(30, Short.MAX_VALUE))))
         );
@@ -172,43 +225,43 @@ public class FactoresRiesgos extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel5)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtMenarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtIMC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtTalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel3)))
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtFUR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel6))
                             .addComponent(jLabel7)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jCheckBox1)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(chk_Nulipara)
+                                .addComponent(txtMenopausia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(36, 36, 36)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCheckBox4)
+                                    .addComponent(txtTiempoTHR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(chk_Exposicion_radiacion)
                                     .addComponent(jLabel9)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jCheckBox2)
-                                    .addComponent(jCheckBox3)
+                                    .addComponent(chk_primer_embarazo)
+                                    .addComponent(chk_THR)
                                     .addComponent(jLabel8)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtTipoTHR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(8, 8, 8)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -217,10 +270,95 @@ public class FactoresRiesgos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtPesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtPesoActionPerformed
 
+    private void txtTipoTHRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoTHRActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTipoTHRActionPerformed
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+     Principal JFactores = new Principal();
+        
+          
+        PESO = Integer.parseInt(txtPeso.getText());
+        TALLA = Integer.parseInt(txtTalla.getText());
+        IMC = Integer.parseInt(txtIMC.getText());
+        MENARCA = Integer.parseInt(txtMenarca.getText());
+        FUR  = Integer.parseInt(txtFUR.getText());
+        MENOPAUSIA = Integer.parseInt(txtMenopausia.getText());
+        TIPO = Integer.parseInt(txtTipoTHR.getText());
+        TIEMPO_DE_USOS =Integer.parseInt(txtTiempoTHR.getText());
+        MOTIVO_EXPO = txt_Exposicion_Motivo.getText();
+        if (chk_Exposicion_radiacion.isSelected() == true) {
+            EXPOSICION = 1;
+        }
+        if (chk_Nulipara.isSelected() == true) {
+            NULIPARA = 1;
+        }
+        if (chk_primer_embarazo.isSelected() == true) {
+            EMBARAZO = 1;
+        }
+        if (chk_THR.isSelected() == true) {
+            TRH = 1;
+        }
+        
+        try{
+        Statement sentencia = null;
+            ResultSet resultados = null;
+            sentencia=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            resultados = sentencia.executeQuery("SELECT MAX(`IdDatos_Paciente`) as maxid FROM `Datos_Paciente`" );
+//            
+            while( resultados.next() )
+            {
+                maxId = resultados.getInt("maxid");
+            }
+//             String query= "INSERT INTO `Factores_Riesgos`"
+//                     + "(`IdDatos_PacienteFK`, `Peso`, `Talla`, `IMC`, `Menarca`, `FUR`, `Menopausia`, `Tipo`, `Tiempo_de_uso`, `Nulipara`, `Embarazo`, `TRH`, `Exposicion`, `Motivo_Exposicion`)"
+//                     + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";    
+//             PreparedStatement preparedStmt = con.prepareStatement(query);
+//            preparedStmt.setInt(1, maxId);
+//            preparedStmt.setInt(2, PESO);
+//            preparedStmt.setInt(3, TALLA);
+//            preparedStmt.setInt(4, IMC);
+//            preparedStmt.setInt(5, MENARCA);
+//            preparedStmt.setInt(6, FUR);
+//            preparedStmt.setInt(7, MENOPAUSIA);
+//            preparedStmt.setInt(8, TIPO);
+//            preparedStmt.setInt(9, TIEMPO_DE_USOS);
+//            preparedStmt.setInt(10, NULIPARA);
+//            preparedStmt.setInt(11, EMBARAZO);
+//            preparedStmt.setInt(12, TRH);
+//            preparedStmt.setInt(13, EXPOSICION);
+//            preparedStmt.setString(14, MOTIVO_EXPO);
+//           
+//            preparedStmt.execute();    
+                
+        }catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Rayos!!! Hubo un problema al conectar con la base" + e.getMessage());
+        }
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private Boolean Verificacion2()
+    {
+        if ((NULIPARA == 1) || (EMBARAZO == 1) || (TRH == 1) || (EXPOSICION == 1)) // Segundo if de verificacion
+        {
+        
+        }
+        
+        if ((PESO != 0) && (TALLA != 0) && (IMC != 0) && (MENARCA != 0) && (FUR != 0) && (TIPO != 0))//Primer if de verificacion 
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -257,12 +395,12 @@ public class FactoresRiesgos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnSiguiente;
+    private javax.swing.JCheckBox chk_Exposicion_radiacion;
+    private javax.swing.JCheckBox chk_Nulipara;
+    private javax.swing.JCheckBox chk_THR;
+    private javax.swing.JCheckBox chk_primer_embarazo;
     private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -273,14 +411,14 @@ public class FactoresRiesgos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField txtFUR;
+    private javax.swing.JTextField txtIMC;
+    private javax.swing.JTextField txtMenarca;
+    private javax.swing.JTextField txtMenopausia;
+    private javax.swing.JTextField txtPeso;
+    private javax.swing.JTextField txtTalla;
+    private javax.swing.JTextField txtTiempoTHR;
+    private javax.swing.JTextField txtTipoTHR;
+    private javax.swing.JTextArea txt_Exposicion_Motivo;
     // End of variables declaration//GEN-END:variables
 }

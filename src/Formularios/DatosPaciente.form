@@ -32,26 +32,26 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
+                              <Component id="Check_Mastalgia" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jCheckBox4" min="-2" max="-2" attributes="0"/>
+                              <Component id="Check_Nodulo" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                              <Component id="Check_Dermatitis" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                              <Component id="Check_Secrecion" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane1" min="-2" pref="355" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
+                              <Component id="Check_Sistematizacion" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnSiguiente" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btn_Cancelar" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -63,27 +63,27 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jFormattedTextField1" min="-2" pref="105" max="-2" attributes="0"/>
+                              <Component id="txtExpediente" min="-2" pref="105" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jFormattedTextField2" min="-2" pref="105" max="-2" attributes="0"/>
+                              <Component id="txtDUI" min="-2" pref="105" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jTextField2" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtEdad" min="-2" pref="26" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jTextField1" min="-2" pref="369" max="-2" attributes="0"/>
+                          <Component id="txtNombre" min="-2" pref="369" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jXDatePicker1" min="-2" max="-2" attributes="0"/>
+                          <Component id="Fecha_Consulta" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jFormattedTextField3" min="-2" pref="93" max="-2" attributes="0"/>
+                              <Component id="txtTelefono" min="-2" pref="93" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -100,9 +100,9 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jFormattedTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtTelefono" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -110,28 +110,28 @@
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jFormattedTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jFormattedTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jXDatePicker1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtExpediente" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDUI" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtEdad" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Fecha_Consulta" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jCheckBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Check_Mastalgia" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Check_Nodulo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Check_Dermatitis" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Check_Secrecion" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Check_Sistematizacion" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="18" max="32767" attributes="0"/>
               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jButton2" max="32767" attributes="0"/>
+                  <Component id="btn_Cancelar" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" pref="80" max="32767" attributes="0"/>
-                  <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnSiguiente" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
@@ -164,15 +164,18 @@
         <Property name="text" type="java.lang.String" value="Fecha"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="txtNombre">
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField1">
+    <Component class="javax.swing.JFormattedTextField" name="txtExpediente">
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField2">
+    <Component class="javax.swing.JFormattedTextField" name="txtDUI">
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField2">
+    <Component class="javax.swing.JTextField" name="txtEdad">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
     </Component>
-    <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePicker1">
+    <Component class="org.jdesktop.swingx.JXDatePicker" name="Fecha_Consulta">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
@@ -187,7 +190,10 @@
         <Property name="text" type="java.lang.String" value="Tel:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField3">
+    <Component class="javax.swing.JFormattedTextField" name="txtTelefono">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
@@ -197,27 +203,27 @@
         <Property name="text" type="java.lang.String" value="Motivo Consulta"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+    <Component class="javax.swing.JCheckBox" name="Check_Mastalgia">
       <Properties>
         <Property name="text" type="java.lang.String" value="Mastalgia"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox2">
+    <Component class="javax.swing.JCheckBox" name="Check_Dermatitis">
       <Properties>
         <Property name="text" type="java.lang.String" value="Dermatitis"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox3">
+    <Component class="javax.swing.JCheckBox" name="Check_Secrecion">
       <Properties>
         <Property name="text" type="java.lang.String" value="Secrecion"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox4">
+    <Component class="javax.swing.JCheckBox" name="Check_Nodulo">
       <Properties>
         <Property name="text" type="java.lang.String" value="Nodulo"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox5">
+    <Component class="javax.swing.JCheckBox" name="Check_Sistematizacion">
       <Properties>
         <Property name="text" type="java.lang.String" value="Z.Sistematizacion"/>
       </Properties>
@@ -229,7 +235,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextPane" name="jTextPane1">
+        <Component class="javax.swing.JTextPane" name="TextArea_Otros">
         </Component>
       </SubComponents>
     </Container>
@@ -241,12 +247,15 @@
         <Property name="text" type="java.lang.String" value="Otros:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnSiguiente">
       <Properties>
         <Property name="text" type="java.lang.String" value="Siguiente"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSiguienteActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btn_Cancelar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
